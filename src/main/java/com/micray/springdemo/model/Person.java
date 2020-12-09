@@ -2,11 +2,19 @@ package com.micray.springdemo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+import javax.persistence.*;
 import java.util.UUID;
 
+@Entity
+@Table(name = "person")
 public class Person {
-    private final UUID id;
-    private final String name;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
+    private String name;
+
+    public Person(){}
 
     public Person(@JsonProperty("id") UUID id,
                   @JsonProperty("name") String name) {

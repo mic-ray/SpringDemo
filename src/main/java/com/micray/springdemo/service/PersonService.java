@@ -2,6 +2,7 @@ package com.micray.springdemo.service;
 
 import com.micray.springdemo.dao.PersonDao;
 import com.micray.springdemo.model.Person;
+import com.micray.springdemo.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,8 @@ import java.util.UUID;
 public class PersonService {
 
     private final PersonDao personDao;
+    @Autowired
+    private PeopleRepository peopleRepository;
 
     @Autowired
     public PersonService(@Qualifier("fakeDao") PersonDao personDao) {
@@ -25,7 +28,7 @@ public class PersonService {
     }
 
     public List<Person> getAllPeople() {
-        return personDao.selectAllPeople();
+        return (List<Person>) peopleRepository.findAll();
     }
 
     public Optional<Person> getPersonById(UUID id){
