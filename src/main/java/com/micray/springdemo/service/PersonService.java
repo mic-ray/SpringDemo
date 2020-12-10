@@ -1,10 +1,9 @@
 package com.micray.springdemo.service;
 
-import com.micray.springdemo.dao.PersonDao;
+// import com.micray.springdemo.dao.PersonDao;
 import com.micray.springdemo.model.Person;
 import com.micray.springdemo.repository.PeopleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,17 +13,19 @@ import java.util.UUID;
 @Service
 public class PersonService {
 
-    private final PersonDao personDao;
-    @Autowired
-    private PeopleRepository peopleRepository;
+    //private final PersonDao personDao;
+
+    private final PeopleRepository peopleRepository;
 
     @Autowired
-    public PersonService(@Qualifier("fakeDao") PersonDao personDao) {
-        this.personDao = personDao;
+    public PersonService(//@Qualifier("fakeDao") PersonDao personDao,
+                          PeopleRepository peopleRepository) {
+        this.peopleRepository = peopleRepository;
+        //this.personDao = personDao;
     }
 
-    public int addPerson(Person person){
-        return personDao.insertPerson(person);
+    public void addPerson(Person person){
+        peopleRepository.save(person);
     }
 
     public List<Person> getAllPeople() {
@@ -32,14 +33,21 @@ public class PersonService {
     }
 
     public Optional<Person> getPersonById(UUID id){
-        return personDao.selectPersonById(id);
+        return peopleRepository.findById(id);
     }
 
-    public int deletePersonById(UUID id){
-        return personDao.deletePersonById(id);
+    public void deletePersonById(UUID id){
+        peopleRepository.deleteById(id);
     }
 
-    public int updatePersonById(UUID id, Person person){
-        return personDao.updatePersonById(id, person);
+    public void updatePersonById(UUID id, Person person){
+        Optional<Person> personOptional = peopleRepository.findById(id);
+
+        if(personOptional.isPresent()){
+            Person personToUpdate = personOptional.get();
+            personToUpdate.setName(person.getName());
+            peopleRepository.save(personToUpdate);
+        }
+
     }
 }

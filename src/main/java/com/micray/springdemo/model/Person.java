@@ -14,11 +14,11 @@ public class Person {
     private UUID id;
     private String name;
 
-    public Person(){}
+    // Default no-arg constructor required for JPA
+    protected Person(){}
 
-    public Person(@JsonProperty("id") UUID id,
+    public Person(
                   @JsonProperty("name") String name) {
-        this.id = id;
         this.name = name;
     }
 
@@ -28,6 +28,10 @@ public class Person {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
 
