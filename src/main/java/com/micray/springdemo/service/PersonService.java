@@ -24,8 +24,8 @@ public class PersonService {
         //this.personDao = personDao;
     }
 
-    public void addPerson(Person person){
-        peopleRepository.save(person);
+    public Person addPerson(Person person){
+        return peopleRepository.save(person);
     }
 
     public List<Person> getAllPeople() {
@@ -36,18 +36,18 @@ public class PersonService {
         return peopleRepository.findById(id);
     }
 
-    public void deletePersonById(UUID id){
+    public UUID deletePersonById(UUID id){
         peopleRepository.deleteById(id);
+        return id;
     }
 
-    public void updatePersonById(UUID id, Person person){
+    public Person updatePersonById(UUID id, Person person){
         Optional<Person> personOptional = peopleRepository.findById(id);
-
         if(personOptional.isPresent()){
             Person personToUpdate = personOptional.get();
             personToUpdate.setName(person.getName());
-            peopleRepository.save(personToUpdate);
+            return peopleRepository.save(personToUpdate);
         }
-
+        return null;
     }
 }

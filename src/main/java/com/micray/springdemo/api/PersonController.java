@@ -1,8 +1,11 @@
 package com.micray.springdemo.api;
 
 import com.micray.springdemo.model.Person;
+import com.micray.springdemo.model.ResponseMessage;
 import com.micray.springdemo.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,8 +22,8 @@ public class PersonController {
     }
 
     @PostMapping
-    public void addPerson(@RequestBody Person person){
-        personService.addPerson(person);
+    public Person addPerson(@RequestBody Person person){
+        return personService.addPerson(person);
     }
 
     @GetMapping
@@ -34,12 +37,20 @@ public class PersonController {
     }
 
     @DeleteMapping(path="{id}")
-    public void deletePersonById(@PathVariable("id") UUID id){
-        personService.deletePersonById(id);
+    public UUID deletePersonById(@PathVariable("id") UUID id){
+        return personService.deletePersonById(id);
     }
 
     @PutMapping(path="{id}")
-    public void updatePersonById(@PathVariable("id") UUID id, @RequestBody Person person){
-        personService.updatePersonById(id,person);
+    public ResponseEntity<ResponseMessage> updatePersonById(@PathVariable("id") UUID id, @RequestBody Person person){
+        Person updatedPerson = personService.updatePersonById(id,person);
+        return updatedPerson != null ? new ResponseEntity<>(
+                new ResponseMessage("Updated resource!",updatedPerson),
+                HttpStatus.OK
+
+        ) : new ResponseEntity<>(
+                new ResponseMessage("Resource was not updated!",null),
+                HttpStatus.OK
+        ) ;
     }
 }
