@@ -1,5 +1,6 @@
 package com.micray.springdemo.api;
 
+import com.micray.springdemo.exception.ApiRequestException;
 import com.micray.springdemo.model.Person;
 import com.micray.springdemo.model.ResponseMessage;
 import com.micray.springdemo.service.PersonService;
@@ -28,7 +29,8 @@ public class PersonController {
 
     @GetMapping
     public List<Person> getAllPeople(){
-        return personService.getAllPeople();
+        throw new ApiRequestException("Could not find all people");
+        // return personService.getAllPeople();
     }
 
     @GetMapping(path = "{id}")
