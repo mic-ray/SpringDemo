@@ -29,7 +29,7 @@ public class PersonController {
 
     @GetMapping
     public List<Person> getAllPeople(){
-        throw new ApiRequestException("Could not find all people");
+        throw new ApiRequestException("Could not find all people", HttpStatus.NOT_FOUND);
         // return personService.getAllPeople();
     }
 

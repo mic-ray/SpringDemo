@@ -1,11 +1,16 @@
 package com.micray.springdemo.exception;
 
+import org.springframework.http.HttpStatus;
+
 public class ApiRequestException extends RuntimeException {
-    public ApiRequestException(String message) {
+
+    private final HttpStatus status;
+    public ApiRequestException(String message, HttpStatus status) {
         super(message);
+        this.status = status;
     }
 
-    public ApiRequestException(String message, Throwable cause){
-        super(message, cause);
+    public HttpStatus getStatus() {
+        return status;
     }
 }
