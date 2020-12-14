@@ -36,9 +36,9 @@ public class PersonService {
         return peopleRepository.findById(id);
     }
 
-    public UUID deletePersonById(UUID id){
+    public Boolean deletePersonById(UUID id){
         peopleRepository.deleteById(id);
-        return id;
+        return true;
     }
 
     public Person updatePersonById(UUID id, Person person){
