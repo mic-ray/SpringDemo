@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequestMapping("api/v1/person")
@@ -39,11 +38,20 @@ public class PersonController {
 
     @GetMapping(path = "{id}")
     public Person getPersonById(@PathVariable("id") UUID id){
-        Optional<Person> personOptional = personService.getPersonById(id);
-        if(!personOptional.isPresent()){
+        Person person = personService.getPersonById(id);
+        if(person == null){
             throw new ApiRequestException("Resource not found",HttpStatus.NOT_FOUND);
         }
-        return personOptional.get();
+        return person;
+    }
+
+    @GetMapping(path="{name}")
+    public Person getPersonByName(@PathVariable("name") String name){
+        Person person = personService.getPersonByName(name);
+        if(person == null){
+            throw new ApiRequestException("Resource not found",HttpStatus.NOT_FOUND);
+        }
+        return person;
     }
 
     @DeleteMapping(path="{id}")

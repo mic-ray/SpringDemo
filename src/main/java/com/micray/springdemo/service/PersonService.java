@@ -32,8 +32,13 @@ public class PersonService {
         return (List<Person>) peopleRepository.findAll();
     }
 
-    public Optional<Person> getPersonById(UUID id){
-        return peopleRepository.findById(id);
+    public Person getPersonById(UUID id){
+        return peopleRepository.findById(id).orElse(null);
+    }
+
+
+    public Person getPersonByName(String name){
+        return peopleRepository.findByName(name).orElse(null);
     }
 
     public Boolean deletePersonById(UUID id){
