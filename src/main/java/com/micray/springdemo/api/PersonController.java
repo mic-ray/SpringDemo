@@ -45,8 +45,8 @@ public class PersonController {
         return person;
     }
 
-    @GetMapping(path="{name}")
-    public Person getPersonByName(@PathVariable("name") String name){
+    @GetMapping(path = "name")
+    public Person getPersonByName(@RequestParam(value = "name") String name){
         Person person = personService.getPersonByName(name);
         if(person == null){
             throw new ApiRequestException("Resource not found",HttpStatus.NOT_FOUND);
