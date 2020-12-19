@@ -9,6 +9,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "person")
 public class Person {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
@@ -17,13 +18,16 @@ public class Person {
     // Default no-arg constructor required for JPA
     protected Person(){}
 
-    public Person(
-                  @JsonProperty("name") String name) {
+    public Person(@JsonProperty("name") String name) {
         this.name = name;
     }
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
