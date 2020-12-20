@@ -8,8 +8,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -75,5 +78,24 @@ class PersonControllerTest {
         this.mockMvc.perform(get("/api/v1/person/"+id)).andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Resource not found"));
+    }
+
+    @Test
+    void getAllPeopleShouldReturnPeople() throws Exception{
+
+        Person person1 = new Person("Mike");
+        Person person2 = new Person("James");
+        List<Person> personList = new ArrayList<>();
+        personList.add(person1);
+        personList.add(person2);
+
+        when(personService.getAllPeople()).thenReturn(personList);
+
+        this.mockMvc.perform(get("/api/v1/person/")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].name").value("Mike"))
+                .andExpect(jsonPath("$[1].name").value("James"));
     }
 }
