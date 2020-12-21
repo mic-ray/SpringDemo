@@ -38,7 +38,8 @@ class PersonControllerTest {
         // If a name is passed, that is not provided by the PersonService it should return a 404
         this.mockMvc.perform(get("/api/v1/person/name?name=Mickey")).andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Resource not found"));
+                .andExpect(jsonPath("$.message").value("Resource not found"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
     @Test
@@ -47,12 +48,14 @@ class PersonControllerTest {
 
         this.mockMvc.perform(get("/api/v1/person/name?name=Mike")).andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Resource not found"));
+                .andExpect(jsonPath("$.message").value("Resource not found"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
 
         // If a name is passed, that is not provided by the PersonService it should also return a 404
         this.mockMvc.perform(get("/api/v1/person/name?name=Mickey")).andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Resource not found"));
+                .andExpect(jsonPath("$.message").value("Resource not found"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
     @Test
@@ -77,7 +80,8 @@ class PersonControllerTest {
 
         this.mockMvc.perform(get("/api/v1/person/"+id)).andDo(print())
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value("Resource not found"));
+                .andExpect(jsonPath("$.message").value("Resource not found"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 
     @Test
@@ -97,5 +101,16 @@ class PersonControllerTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("Mike"))
                 .andExpect(jsonPath("$[1].name").value("James"));
+    }
+
+    @Test
+    void getAllPeopleShouldReturnNotFound() throws Exception{
+
+        when(personService.getAllPeople()).thenReturn(null);
+
+        this.mockMvc.perform(get("/api/v1/person/")).andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value("Resources not found"))
+                .andExpect(jsonPath("$.timestamp").isNotEmpty());
     }
 }
