@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -112,5 +113,14 @@ class PersonControllerTest {
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value("Resources not found"))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    @Test
+    void deletePersonByIdShouldReturnNoContent() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(personService.deletePersonById(id)).thenReturn(true);
+
+        this.mockMvc.perform(delete("/api/v1/person/"+id)).andDo(print())
+                .andExpect(status().isNoContent());
     }
 }
