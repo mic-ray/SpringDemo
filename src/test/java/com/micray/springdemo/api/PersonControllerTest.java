@@ -1,18 +1,28 @@
 package com.micray.springdemo.api;
 
+import com.micray.springdemo.SecurityConfiguration;
 import com.micray.springdemo.model.Person;
 import com.micray.springdemo.service.PersonService;
+
+import org.junit.Before;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.mockito.Mockito.when;
@@ -20,10 +30,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(PersonController.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = SecurityConfiguration.class)
 class PersonControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private WebApplicationContext context;
+
+    @Before
+    public void setup() {
+        mockMvc = MockMvcBuilders
+                .webAppContextSetup(context)
+                .apply(springSecurity())
+                .build();
+    }
+
 
     @MockBean
     private PersonService personService;
@@ -120,7 +144,18 @@ class PersonControllerTest {
         UUID id = UUID.randomUUID();
         when(personService.deletePersonById(id)).thenReturn(true);
 
-        this.mockMvc.perform(delete("/api/v1/person/"+id)).andDo(print())
+        this.mockMvc.perform(delete("/api/v1/person/"+id).with(httpBasic("user","password")))
+                .andDo(print())
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void deletePersonByIdShouldReturnServerError() throws Exception {
+        UUID id = UUID.randomUUID();
+        when(personService.deletePersonById(id)).thenReturn(false);
+
+        this.mockMvc.perform(delete("/api/v1/person/"+id).with(httpBasic("user","password")))
+                .andDo(print())
+                .andExpect(status().isInternalServerError());
     }
 }
