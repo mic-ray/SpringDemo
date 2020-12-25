@@ -1,11 +1,10 @@
 package com.micray.springdemo.repository;
 
 import com.micray.springdemo.model.Person;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;
-import java.util.UUID;
 
-public interface PeopleRepository extends CrudRepository<Person, UUID> {
+public interface PeopleRepository extends MongoRepository<Person, String> {
     Optional<Person> findByName(String name);
 }

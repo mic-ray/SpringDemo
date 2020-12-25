@@ -1,18 +1,16 @@
 package com.micray.springdemo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-
-import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(name = "person")
+@Document(collection = "people")
 public class Person {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private String id;
     private String name;
 
     // Default no-arg constructor required for JPA
@@ -22,11 +20,11 @@ public class Person {
         this.name = name;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(String id) {
         this.id = id;
     }
 

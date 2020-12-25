@@ -25,12 +25,12 @@ public class FakePersonDataService implements PersonDao {
     }
 
     @Override
-    public Optional<Person> selectPersonById(UUID id) {
+    public Optional<Person> selectPersonById(String id) {
         return DB.stream().filter(person -> person.getId().equals(id)).findFirst();
     }
 
     @Override
-    public int deletePersonById(UUID id) {
+    public int deletePersonById(String id) {
         Optional<Person> personOptional = selectPersonById(id);
         if (!personOptional.isPresent()) {
             return 0;
@@ -40,7 +40,7 @@ public class FakePersonDataService implements PersonDao {
     }
 
     @Override
-    public int updatePersonById(UUID id, Person person) {
+    public int updatePersonById(String id, Person person) {
         return selectPersonById(id).map(p -> {
             int updateIndex = DB.indexOf(p);
             if (updateIndex >= 0) {

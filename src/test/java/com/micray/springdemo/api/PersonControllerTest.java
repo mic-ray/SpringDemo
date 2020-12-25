@@ -18,7 +18,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
@@ -85,7 +84,7 @@ class PersonControllerTest {
 
     @Test
     void getPersonByIdShouldReturnPerson() throws Exception {
-        UUID id = UUID.randomUUID();
+        String id = "123";
         Person returnPerson = new Person("Mike");
         returnPerson.setId(id);
 
@@ -94,12 +93,12 @@ class PersonControllerTest {
         this.mockMvc.perform(get("/api/v1/person/"+id)).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.name").value("Mike"))
-                .andExpect(jsonPath("$.id").value(id.toString()));
+                .andExpect(jsonPath("$.id").value(id));
     }
 
     @Test
     void getPersonByIdShouldReturnNotFound() throws Exception {
-        UUID id = UUID.randomUUID();
+        String id = "123";
 
         when(personService.getPersonById(id)).thenReturn(null);
 
@@ -141,7 +140,7 @@ class PersonControllerTest {
 
     @Test
     void deletePersonByIdShouldReturnNoContent() throws Exception {
-        UUID id = UUID.randomUUID();
+        String id = "123";
         when(personService.deletePersonById(id)).thenReturn(true);
 
         this.mockMvc.perform(delete("/api/v1/person/"+id).with(httpBasic("user","password")))
@@ -151,7 +150,7 @@ class PersonControllerTest {
 
     @Test
     void deletePersonByIdShouldReturnServerError() throws Exception {
-        UUID id = UUID.randomUUID();
+        String id = "123";
         when(personService.deletePersonById(id)).thenReturn(false);
 
         this.mockMvc.perform(delete("/api/v1/person/"+id).with(httpBasic("user","password")))

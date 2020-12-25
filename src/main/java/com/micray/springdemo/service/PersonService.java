@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class PersonService {
@@ -29,10 +28,10 @@ public class PersonService {
     }
 
     public List<Person> getAllPeople() {
-        return (List<Person>) peopleRepository.findAll();
+        return peopleRepository.findAll();
     }
 
-    public Person getPersonById(UUID id){
+    public Person getPersonById(String id){
         return peopleRepository.findById(id).orElse(null);
     }
 
@@ -41,12 +40,12 @@ public class PersonService {
         return peopleRepository.findByName(name).orElse(null);
     }
 
-    public Boolean deletePersonById(UUID id){
+    public Boolean deletePersonById(String id){
         peopleRepository.deleteById(id);
         return true;
     }
 
-    public Person updatePersonById(UUID id, Person person){
+    public Person updatePersonById(String id, Person person){
         Optional<Person> personOptional = peopleRepository.findById(id);
         if(personOptional.isPresent()){
             Person personToUpdate = personOptional.get();

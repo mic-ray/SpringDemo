@@ -37,7 +37,7 @@ public class PersonController {
     }
 
     @GetMapping(path = "{id}")
-    public Person getPersonById(@PathVariable("id") UUID id){
+    public Person getPersonById(@PathVariable("id") String id){
         Person person = personService.getPersonById(id);
         if(person == null){
             throw new ApiRequestException("Resource not found",HttpStatus.NOT_FOUND);
@@ -55,7 +55,7 @@ public class PersonController {
     }
 
     @DeleteMapping(path="{id}")
-    public ResponseEntity<HttpStatus> deletePersonById(@PathVariable("id") UUID id){
+    public ResponseEntity<HttpStatus> deletePersonById(@PathVariable("id") String id){
         Boolean deleted = personService.deletePersonById(id);
         if(!deleted){
             throw new ApiRequestException("Resource was not deleted", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -64,7 +64,7 @@ public class PersonController {
     }
 
     @PutMapping(path="{id}")
-    public ResponseEntity<ResponseMessage> updatePersonById(@PathVariable("id") UUID id, @RequestBody Person person){
+    public ResponseEntity<ResponseMessage> updatePersonById(@PathVariable("id") String id, @RequestBody Person person){
         Person updatedPerson = personService.updatePersonById(id,person);
 
         if(updatedPerson == null) {
