@@ -25,4 +25,14 @@ class GreetingViewControllerTest {
                 .andExpect(model().attributeExists("name"))
                 .andExpect(model().attribute("name", "Mike"));
     }
+
+    @Test
+    void greetingShouldReturnDefaultModelAndView() throws Exception {
+        this.mockMvc
+                .perform(get("/greeting")).andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("greeting"))
+                .andExpect(model().attributeExists("name"))
+                .andExpect(model().attribute("name", "World"));
+    }
 }
